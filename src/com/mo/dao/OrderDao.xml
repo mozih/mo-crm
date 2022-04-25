@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mo.dao.OrderDao">
+
+<select id="orderCountByQueryVo" parameterType="orderQueryVo" resultType="Integer">
+		select count(1) from tb_order
+		<where>
+			<if test="orderType!=null and orderType!=''">
+				and order_type = #{orderType}
+			</if>	
+			<if test="orderUptime!=null and orderUptime!=''">
+				and order_uptime like "%"#{orderUptime}"%"
+			</if>
+			<if test="order_id!=null and order_id!=''">
+				and order_id like "%"#{order_id}"%"
+			</if>
+			<if test="order_studname!=null and order_studname!=''">
+				and order_studname like "%"#{order_studname}"%"
+			</if>
+			<if test="order_username!=null and order_username!=''">
+				and order_username like "%"#{order_username}"%"
+			</if>
+		</where>
+	</select>
+	<resultMap type="order" id="orderLists">
+		<result column="id" property="id"/>
+		<result column="order_id" property="order_id"/>
+		<result column="order_studname" property="order_studname"/>
+		<result column="order_type" property="order_type"/>
+		<result column="order_username" property="order_username"/>
+		<result column="order_price" property="order_price"/>
+		<result column="order_createtime" property="order_createtime"/>
+		<result column="order_uptime" property="order_uptime"/>
+	</resultMap> 
+	<select id="selectOrderListByQueryVo" parameterType="orderQueryVo" resultMap="orderLists">
+		select * from tb_order
+		<where>
+			<if test="orderType!=null and orderType!=''">
+				and order_type = #{orderType}
+			</if>	
+			<if test="orderUptime!=null and orderUptime!=''">
+				and order_uptime like "%"#{orderUptime}"%"
+			</if>
+			<if test="order_id!=null and order_id!=''">
+				and order_id like "%"#{order_id}"%"
+			</if>
+			<if test="order_studname!=null and order_studname!=''">
+				and order_studname like "%"#{order_studname}"%"
+			</if>
+			<if test="order_username!=null and order_username!=''">
+				and order_username like "%"#{order_username}"%"
+			</if>
+		</where>
+		order by id
+		limit #{startRow},#{size}
+	</select>
+		<select id="selectAllOrderListByQueryVo" parameterType="orderQueryVo" resultMap="orderLists">
+		select * from tb_order
+		<where>
+			<if test="orderType!=null and orderType!=''">
+				and order_type = #{orderType}
+			</if>	
+			<if test="orderUptime!=null and orderUptime!=''">
+				and order_uptime like "%"#{orderUptime}"%"
+			</if>
+			<if test="order_id!=null and order_id!=''">
+				and order_id like "%"#{order_id}"%"
+			</if>
+			<if test="order_studname!=null and order_studname!=''">
+				and order_studname like "%"#{order_studName}"%"
+			</if>
+			<if test="order_username!=null and order_username!=''">
+				and order_username like "%"#{order_username}"%"
+			</if>
+		</where>
+		order by id
+	</select>
+	<!-- public order selectorderById(Integer id); -->
+	<select id="selectOrderById" parameterType="Integer" resultMap="orderLists">
+		select * from tb_order
+		<where>
+			id=#{id}
+		</where>
+	</select>
+	
+	<!-- public void updateorderById(order order); -->
+	<update id="updateOrderById" parameterType="order">
+		update tb_order
+		<set>
+			<if test="order_id!=null and order_id!=''">
+			 	order_id = #{order_id},
+			</if>
+			<if test="order_type!=null and order_type!=''">
+			 	order_type = #{order_type},
+			</if>
+			<if test="order_studname!=null and order_studname!=''">
+			 	order_studname = #{order_studname},
+			</if>
+			<if test="order_username!=null and order_username!=''">
+			 	order_username = #{order_username},
+			</if>
+			<if test="order_price!=null and order_price!=''">
+			 	order_price = #{order_price},
+			</if>
+			<if test="order_uptime!=null and order_uptime!=''">
+			 	order_uptime = #{order_uptime},
+			</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	<!-- public void deleteorderById(Integer id); -->
+	<delete id="deleteOrderById" parameterType="Integer">
+		delete from tb_order where id=#{id}
+	</delete>
+	
+	<insert id="saveNewOrder" parameterType="order">
+		insert into tb_order value(null,
+			#{order_id},#{order_studname},#{order_username},#{order_type},#{order_price},#{order_createtime},#{order_uptime})
+	</insert>
+	<select id="check" parameterType="order" resultType="Long">
+		select count(1) from tb_order 
+		where order_id =#{order_id} and order_type = #{order_type} and order_price=#{order_price} and order_username=#{order_username} and order_studname=#{order_studname}
+	</select>
+</mapper>

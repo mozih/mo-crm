@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mo.dao.UserDao">
+
+	<select id="UserCountByQueryVo" parameterType="UserQueryVo"
+		resultType="Integer">
+		select count(1) from sys_user
+		<where>
+			<if test="user_name!=null and user_name!=''">
+				and user_name = #{user_name}
+			</if>
+			<if test="user_phone!=null and user_phone!=''">
+				and user_phone like "%"#{user_phone}"%"
+			</if>
+			<if test="user_aut!=null and user_aut!=''">
+				and user_aut like "%"#{user_aut}"%"
+			</if>
+		</where>
+	</select>
+
+	<select id="selectUserListByQueryVo" parameterType="UserQueryVo"
+		resultType="User">
+		select * from sys_user
+		<where>
+			<if test="user_name!=null and user_name!=''">
+				and user_name = #{user_name}
+			</if>
+			<if test="user_phone!=null and user_phone!=''">
+				and user_phone like "%"#{user_phone}"%"
+			</if>
+			<if test="user_aut!=null and user_aut!=''">
+				and user_aut like "%"#{user_aut}"%"
+			</if>
+		</where>
+		order by user_id
+		limit #{startRow},#{size}
+	</select>
+	<select id="selectUserById" parameterType="Integer"
+		resultType="User">
+		select * from sys_user
+		<where>
+			user_id=#{user_id}
+		</where>
+	</select>
+
+	<update id="updateUserById" parameterType="User">
+		update sys_user
+		<set>
+			<if test="user_name!=null and user_name!=''">
+				user_name = #{user_name},
+			</if>
+			<if test="user_password!=null and user_password!=''">
+				user_password = #{user_password},
+			</if>
+			<if test="user_phone!=null and user_phone!=''">
+				user_phone = #{user_phone},
+			</if>
+			<if test="user_aut!=null and user_aut!=''">
+				user_aut = #{user_aut},
+			</if>
+		</set>
+		<where>
+			user_id=#{user_id}
+		</where>
+	</update>
+	<delete id="deleteUserById" parameterType="Integer">
+		delete from sys_user
+		where user_id=#{user_id}
+	</delete>
+
+	<insert id="saveNewUser" parameterType="User">
+		insert into sys_user(user_name,user_password,user_phone,user_aut)
+		value(#{user_name},#{user_password},#{user_phone},#{user_aut})
+	</insert>
+	
+	<update id="updateUserState" parameterType="User">
+		update sys_user
+		<set>
+			<if test="user_state == 1">
+				user_state = 0,
+			</if>
+			<if test="user_state == 0">
+				user_state = 1,
+			</if>
+		</set>
+		<where>
+			user_id=#{user_id}
+		</where>
+	</update>
+</mapper>
